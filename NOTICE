@@ -1,0 +1,13 @@
+cosmos3-blocksv12-fd
+
+Training code for Cosmos3-Nano forward dynamics on the Blocks V12 four-task dataset.
+
+cosmos_framework/configs/base/experiment/action/posttrain_config/action_fd_blocksv12_posttrain.py is derived
+from action_fd_droid_posttrain.py in NVIDIA's cosmos-framework (https://github.com/NVIDIA/cosmos-framework,
+commit 5e67049), distributed under the OpenMDW License Agreement 1.1 (SPDX: OpenMDW-1.1),
+Copyright (c) 2026 NVIDIA CORPORATION & AFFILIATES. That file keeps NVIDIA's notice.
+patches/apply_overlay.py quotes a few anchor lines of the same framework in order to locate its hooks.
+The remaining files are original and are released under the Apache License 2.0 (see LICENSE).
+
+The ReRoPE operator follows "Repurposing RoPE for Relative Camera Control" (arXiv 2602.08068) and the PRoPE
+operator (arXiv 2507.10496).
