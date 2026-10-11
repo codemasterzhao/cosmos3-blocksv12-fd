@@ -12,19 +12,25 @@ python - "$DATA_ROOT" <<'PY'
 import re, sys, time
 from pathlib import Path
 from huggingface_hub import HfApi, get_token, snapshot_download
-from huggingface_hub.errors import HfHubHTTPError
 if get_token() is None:
     sys.exit("Log in to Hugging Face first (hf auth login, or export HF_TOKEN).")
 repo, rev, root = "haibozzz/blocks-v12-4task-lerobot-v30-camgeom", "6fdef09b9b4654d125838641fe8746d350c08bb6", Path(sys.argv[1])
+def rate_limit_wait(e):  # seconds until the window resets if a 429 is anywhere in the exception chain, else None
+    while e is not None:
+        r = getattr(e, "response", None)
+        if getattr(r, "status_code", None) == 429:
+            m = re.search(r"t=(\d+)", r.headers.get("RateLimit", ""))
+            return int(m.group(1)) + 5 if m else 300
+        e = e.__cause__ or e.__context__
+    return None
 for attempt in range(60):
     try:
         snapshot_download(repo, repo_type="dataset", revision=rev, local_dir=str(root), max_workers=8)
         break
-    except HfHubHTTPError as e:
-        if e.response is None or e.response.status_code != 429:
+    except Exception as e:
+        wait = rate_limit_wait(e)
+        if wait is None:
             raise
-        m = re.search(r"t=(\d+)", e.response.headers.get("RateLimit", ""))
-        wait = int(m.group(1)) + 5 if m else 300
         print(f"Hugging Face rate limit (HTTP 429); resuming in {wait} s", flush=True)
         time.sleep(wait)
 else:
