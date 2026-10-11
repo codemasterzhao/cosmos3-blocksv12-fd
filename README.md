@@ -7,6 +7,7 @@ plus one commit that adds Cosmos3-Nano forward-dynamics training on our simulate
 ```bash
 git clone https://github.com/codemasterzhao/cosmos3-blocksv12-fd && cd cosmos3-blocksv12-fd
 uv sync --all-extras --group=cu128-train && source .venv/bin/activate
+hf auth login    # the data download needs a logged-in Hugging Face account
 DATA_ROOT=/local/blocksv12 bash blocksv12/download_data.sh
 BASE_ROOT=/local/cosmos_base bash blocksv12/prep_base.sh
 ARM=c0 RUN_NAME=c0_e3 MAX_ITER=52950 SAVE_ITER=5000 \

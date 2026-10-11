@@ -17,6 +17,7 @@ revision `411f42a8`; data `haibozzz/blocks-v12-4task-lerobot-v30-camgeom` revisi
 
 ```bash
 uv sync --all-extras --group=cu128-train && source .venv/bin/activate   # cu130-train on CUDA 13 (docs/setup.md)
+hf auth login                                                             # anonymous downloads get rate-limited
 DATA_ROOT=/local/blocksv12 bash blocksv12/download_data.sh                # 29 GB
 BASE_ROOT=/local/cosmos_base bash blocksv12/prep_base.sh                  # ~70 GB, Nano + Wan2.2 VAE -> DCP
 ARM=c0 RUN_NAME=c0_e3 MAX_ITER=52950 SAVE_ITER=5000 \
