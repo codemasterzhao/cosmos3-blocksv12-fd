@@ -1,3 +1,24 @@
+# Cosmos3 forward dynamics on Blocks V12
+
+This repository is NVIDIA's [cosmos-framework](https://github.com/NVIDIA/cosmos-framework) at commit `5e67049`
+plus one commit that adds Cosmos3-Nano forward-dynamics training on our simulated Blocks V12 four-task data
+(arms c0 baseline, c1 + ReRoPE, c2 + ReRoPE + view dropout, c5 + view dropout). Train directly:
+
+```bash
+git clone https://github.com/codemasterzhao/cosmos3-blocksv12-fd && cd cosmos3-blocksv12-fd
+uv sync --all-extras --group=cu128-train && source .venv/bin/activate
+DATA_ROOT=/local/blocksv12 bash blocksv12/download_data.sh
+BASE_ROOT=/local/cosmos_base bash blocksv12/prep_base.sh
+ARM=c0 RUN_NAME=c0_e3 MAX_ITER=52950 SAVE_ITER=5000 \
+DATASET_PATH=/local/blocksv12 BASE_CHECKPOINT_PATH=/local/cosmos_base/Cosmos3-Nano-dcp \
+WAN_VAE_PATH=/local/cosmos_base/wan22_vae/Wan2.2_VAE.pth bash blocksv12/train.sh
+```
+
+Details (arms, data, budget, what changed, limits): [blocksv12/README.md](blocksv12/README.md).
+The original cosmos-framework README follows.
+
+---
+
 <p align="center">
     <img src="https://github.com/user-attachments/assets/28f2d612-bbd6-44a3-8795-833d05e9f05f" width="274" alt="NVIDIA Cosmos"/>
 </p>

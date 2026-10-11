@@ -426,6 +426,7 @@ def pack_input_sequence(
         seq_builder.null_action_supertokens = null_action_flags[0]
 
     # Finalize and return packed data
-    return seq_builder.finalize(
-        gen_data_clean=gen_data_clean,
-    )
+    packed_seq_out = seq_builder.finalize(gen_data_clean=gen_data_clean)
+    packed_seq_out.rerope_P_T = getattr(gen_data_clean, "rerope_P_T", None)  # ReRoPE
+    packed_seq_out.rerope_P_inv = getattr(gen_data_clean, "rerope_P_inv", None)
+    return packed_seq_out

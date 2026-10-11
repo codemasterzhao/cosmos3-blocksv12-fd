@@ -50,6 +50,8 @@ class GenerationDataClean:
     # Shape: [num_samples], each element is a list of floats (one per control stream).
     # None for non-transfer or single-control samples.
     control_weights: list[list[float]] | None = None
+    rerope_P_T: list[torch.Tensor] | None = None  # ReRoPE: per-sample [F_lat, V, 4, 4]
+    rerope_P_inv: list[torch.Tensor] | None = None
 
 
 @dataclass(slots=True)

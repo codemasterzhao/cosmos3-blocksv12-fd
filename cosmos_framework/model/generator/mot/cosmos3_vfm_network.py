@@ -1064,6 +1064,8 @@ class Cosmos3VFMNetwork(PreTrainedModel):
             attention_meta.noisy_token_range = noisy_range
             attention_meta.control_weights = weights
 
+        from cosmos_framework.model.generator.mot.rerope import attach_rerope  # ReRoPE
+        attach_rerope(input_pack, packed_seq, bool(sequence_shard_parallel_dims is not None and sequence_shard_parallel_dims.cp_enabled))
         input_pack, packed_position_ids = get_context_parallel_sharded_sequence(
             attn_implementation=self.config.joint_attn_implementation,
             input_pack=input_pack,

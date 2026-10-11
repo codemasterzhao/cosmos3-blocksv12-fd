@@ -3579,6 +3579,8 @@ class OmniMoTModel(ImaginaireModel):
             action_domain_id=action_domain_id,
             num_vision_items_per_sample=num_vision_items_per_sample,
             raw_action_dim=raw_action_dim,
+            rerope_P_T=data_batch.get("rerope_P_T"),
+            rerope_P_inv=data_batch.get("rerope_P_inv"),
             control_weights=control_weights,
         )
 

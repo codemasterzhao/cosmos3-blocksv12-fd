@@ -1,0 +1,15 @@
+[job]
+task = "vfm"
+experiment = "action_fd_blocksv12_posttrain"
+project = "cosmos3_v12"
+group = "action_fd"
+
+[model]
+precision = "bfloat16"
+
+[model.parallelism]
+data_parallel_shard_degree = 8
+data_parallel_replicate_degree = 1
+
+[model.tokenizer]
+vae_path = "${oc.env:WAN_VAE_PATH}"

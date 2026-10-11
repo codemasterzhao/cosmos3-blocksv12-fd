@@ -52,3 +52,15 @@ Notice:
   Upstream source files do not contain an explicit copyright notice.
 Files:
   cosmos_framework/model/generator/utils/taylorseer.py
+
+Blocks V12 forward-dynamics additions (2026-10, Haibo Zhao)
+This repository is cosmos-framework at commit 5e67049 plus one commit that adds
+  cosmos_framework/data/generator/action/datasets/blocksv12_fd_dataset.py
+  cosmos_framework/configs/base/experiment/action/posttrain_config/action_fd_blocksv12_posttrain.py
+    (derived from action_fd_droid_posttrain.py)
+  cosmos_framework/model/generator/mot/rerope.py
+    (ReRoPE, arXiv 2602.08068; PRoPE operator, arXiv 2507.10496)
+  examples/toml/sft_config/action_fd_blocksv12_posttrain.toml
+  blocksv12/
+changes a few lines in seven framework files, prepends a section to README.md and removes .github/workflows.
+These changes are distributed under the same OpenMDW-1.1 terms (see LICENSE).

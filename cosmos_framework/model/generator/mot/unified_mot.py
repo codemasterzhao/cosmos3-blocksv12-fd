@@ -15,6 +15,7 @@ from torch.distributed import ProcessGroup
 from cosmos_framework.model.attention import attention as imaginaire_attention
 from cosmos_framework.model.attention.masks import CausalType
 from cosmos_framework.utils import log
+from cosmos_framework.model.generator.mot.rerope import apply_rerope  # ReRoPE
 from cosmos_framework.model.generator.mot.attention import (
     AttentionMaskType,
     dispatch_attention,
@@ -649,6 +650,8 @@ class PackedAttentionMoT(nn.Module):
             get_gen_seq(packed_sin),
             unsqueeze_dim=1,
         )  # q_gen_: [N_gen,num_heads,head_dim], k_gen_: [N_gen,num_kv_heads,head_dim]
+        if pack.get("rerope_P_T") is not None:  # ReRoPE on the generation-side Q/K only
+            q_gen_, k_gen_ = apply_rerope(q_gen, k_gen, q_gen_, k_gen_, pack["rerope_P_T"], pack["rerope_P_inv"])
 
         packed_query_states_ = from_und_gen_splits(q_und_, q_gen_, pack)  # [N_und+N_gen,num_heads,head_dim]
         packed_key_states_ = from_und_gen_splits(k_und_, k_gen_, pack)  # [N_und+N_gen,num_kv_heads,head_dim]
