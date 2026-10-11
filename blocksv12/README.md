@@ -69,6 +69,8 @@ WAN_VAE_PATH=/local/cosmos_base/wan22_vae/Wan2.2_VAE.pth bash blocksv12/train.sh
   at this sequence length; FSDP alone fits.
 - A resumed run restarts the episode shuffle (the dataloader keeps no cursor), so epoch boundaries are approximate.
 - Only Nano was tested. Edge or Super need their own experiment config and base weights.
-- All four arms ran a 10-step smoke on Nano, 8×H100, on 2026-10-09.
+- All four arms ran a 10-step smoke on Nano, 8×H100, on 2026-10-09. On 2026-10-11 this repo was checked from a fresh
+  GitHub download: `download_data.sh` fetched all 10,812 files (28.8 GB) in ~20 min on a free account, `prep_base.sh`
+  reproduced our converted weights byte for byte, and `train.sh` ran a 10-step c1 run.
 
 Contact: Haibo Zhao (haiboz@allenai.org).

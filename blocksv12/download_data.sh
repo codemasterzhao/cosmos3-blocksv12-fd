@@ -4,7 +4,7 @@
 #   DATA_ROOT=/local/blocksv12 bash blocksv12/download_data.sh      -> use DATASET_PATH=$DATA_ROOT
 # Hugging Face rate-limits requests per 5 minutes (free account: 5,000 file requests). The script disables Xet
 # so each file costs only file requests, and on HTTP 429 it waits for the window to reset and resumes; finished
-# files are not requested again. Expect roughly half an hour on a free account.
+# files are not requested again. Measured 2026-10-11: ~20 min for all 10,812 files on a free account.
 set -euo pipefail
 : "${DATA_ROOT:?set DATA_ROOT to a local directory}"
 export HF_HUB_DISABLE_XET=${HF_HUB_DISABLE_XET:-1}
