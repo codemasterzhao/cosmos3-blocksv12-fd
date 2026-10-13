@@ -11,14 +11,14 @@ four-task data, to benchmark Cosmos against our in-house world models. Four arms
 | **c5** | + view dropout | `REROPE=0 VIEW_DROPOUT_P=0.5` |
 
 Pinned versions: this repo = cosmos-framework `5e67049` plus one commit; base weights `nvidia/Cosmos3-Nano`
-revision `411f42a8`; data `haibozzz/blocks-v12-4task-lerobot-v30-camgeom` revision `6fdef09b`.
+revision `411f42a8`; data `haibozzz/blocks-v12-4task-lerobot-v30-camgeom` revision `338c80ca`.
 
 ## Train
 
 ```bash
 uv sync --all-extras --group=cu128-train && source .venv/bin/activate   # cu130-train on CUDA 13 (docs/setup.md)
 hf auth login                                                             # anonymous downloads get rate-limited
-DATA_ROOT=/local/blocksv12 bash blocksv12/download_data.sh                # 29 GB
+DATA_ROOT=/local/blocksv12 bash blocksv12/download_data.sh                # 32 GB (train + val)
 BASE_ROOT=/local/cosmos_base bash blocksv12/prep_base.sh                  # ~70 GB, Nano + Wan2.2 VAE -> DCP
 ARM=c0 RUN_NAME=c0_e3 MAX_ITER=52950 SAVE_ITER=5000 \
 DATASET_PATH=/local/blocksv12 BASE_CHECKPOINT_PATH=/local/cosmos_base/Cosmos3-Nano-dcp \
@@ -37,8 +37,8 @@ WAN_VAE_PATH=/local/cosmos_base/wan22_vae/Wan2.2_VAE.pth bash blocksv12/train.sh
 
 - Isaac sim, Franka FR3 + Robotiq 2F-85, cameras `front`, `top` (static left) and `wrist`, 25 fps, 640×360;
   tasks pick-and-place, flip, rotate, mixed.
-- `train/`: 3,600 episodes, per task 450 successes + 450 failure twins from the same reset. Train on it as
-  given and do not carve a random validation split out of it. Our 400-episode validation set is held out.
+- `train/`: 3,600 episodes, per task 450 successes + 450 failure twins from the same reset. `val/`: 400
+  episodes (50 + 50 per task), the evaluation set: train on `train/` only, and do not re-split (twins share a reset).
 - `action` = 8-D `[joint_target(7) rad, gripper_raw]`; row *i* is the command issued at frame *i*.
 - Camera poses for ReRoPE are the `observation.camera_T_cw*` columns; intrinsics in `meta/camera_intrinsics.json`.
 - The task strings in `meta/tasks.parquet` are provisional.
@@ -70,7 +70,7 @@ WAN_VAE_PATH=/local/cosmos_base/wan22_vae/Wan2.2_VAE.pth bash blocksv12/train.sh
 - A resumed run restarts the episode shuffle (the dataloader keeps no cursor), so epoch boundaries are approximate.
 - Only Nano was tested. Edge or Super need their own experiment config and base weights.
 - All four arms ran a 10-step smoke on Nano, 8×H100, on 2026-10-09. On 2026-10-11 this repo was checked from a fresh
-  GitHub download: `download_data.sh` fetched all 10,812 files (28.8 GB) in ~20 min on a free account, `prep_base.sh`
+  GitHub download: `download_data.sh` fetched the 10,812 train files (28.8 GB) in ~20 min on a free account, `prep_base.sh`
   reproduced our converted weights byte for byte, and `train.sh` ran a 10-step c1 run.
 
 Contact: Haibo Zhao (haiboz@allenai.org).
